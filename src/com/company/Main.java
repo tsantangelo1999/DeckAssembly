@@ -18,22 +18,55 @@ public class Main
             suits[i] = getStringInput();
         }
         System.out.println("Enter lowest card and highest card. (2 Numbers separated by a space)");
-        String loHi[] = getStringInput().split(" ");
-        int lowCard = Integer.parseInt(loHi[0]);
-        int highCard = Integer.parseInt(loHi[1]);
+        int lowCard = 0;
+        int highCard = 0;
+        while(lowCard < 1)
+        {
+            try
+            {
+                String loHi[] = getStringInput().split(" ");
+                lowCard = Integer.parseInt(loHi[0]);
+                highCard = Integer.parseInt(loHi[1]);
+                if(lowCard > highCard)
+                    throw new Exception();
+            } catch(Exception e)
+            {
+                System.out.println("Low card must be less than highest card.");
+                lowCard = 0;
+                highCard = 0;
+            }
+        }
         System.out.println("Standard face? y/n");
         boolean face = getStringInput().equalsIgnoreCase("y");
         ArrayList<String> extras = new ArrayList<>();
         System.out.println("Extra cards and amount? (card amount card amount...)");
-        String[] extraCards = getStringInput().split(" ");
-        if(extraCards.length > 1)
+        boolean success = false;
+        while(!success)
         {
-            for(int i = 0; i < extraCards.length; i += 2)
+            try
             {
-                for(int j = 0; j < Integer.parseInt(extraCards[i + 1]); j++)
+                String[] extraCards = getStringInput().split(" ");
+                if(extraCards.length > 1)
                 {
-                    extras.add(extraCards[i]);
+                    for(int i = 1; i < extraCards.length; i += 2)
+                    {
+                        if(Integer.parseInt(extraCards[i]) < 1)
+                            throw new Exception();
+                    }
+                    for(int i = 0; i < extraCards.length; i += 2)
+                    {
+                        for(int j = 0; j < Integer.parseInt(extraCards[i + 1]); j++)
+                        {
+                            extras.add(extraCards[i]);
+                        }
+                    }
                 }
+                success = true;
+            }
+            catch(Exception e)
+            {
+                System.out.println("Extra cards must have positive integer amounts.");
+                extras.clear();
             }
         }
         for(int i = 0; i < dupes; i++)
@@ -60,7 +93,19 @@ public class Main
     public static int getNumInput()
     {
         Scanner input = new Scanner(System.in);
-        int ret = input.nextInt();
+        int ret = 0;
+        while(ret < 1)
+        try
+        {
+            ret = input.nextInt();
+            if(ret < 1)
+                throw new Exception();
+        }
+        catch(Exception e)
+        {
+            System.out.println("Numbers must be integers greater than 0");
+            input.nextLine();
+        }
         return ret;
     }
 
